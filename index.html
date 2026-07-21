@@ -45,7 +45,6 @@
     padding: 28px 20px 80px;
   }
 
-  /* ---- window chrome ---- */
   .titlebar{
     display:flex;
     align-items:center;
@@ -67,7 +66,6 @@
   }
   .titlebar .path b{ color: var(--text-muted); font-weight: 500; }
 
-  /* ---- header ---- */
   header.hero{
     background: var(--bg-panel);
     border: 1px solid var(--border);
@@ -101,22 +99,7 @@
     font-size: 15px;
     max-width: 560px;
   }
-  .common-chip{
-    margin-top: 18px;
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--text-muted);
-    background: var(--bg-elevated);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 7px 14px;
-  }
-  .common-chip::before{ content:'●'; color: var(--c-sheet); font-size: 8px; }
 
-  /* ---- tabs ---- */
   .tabs{
     display:flex;
     overflow-x:auto;
@@ -147,7 +130,6 @@
   }
   .tab.active .tdot{ opacity:1; }
 
-  /* ---- panel ---- */
   .panel{
     display:none;
     background: var(--bg);
@@ -163,7 +145,7 @@
   .p-summary{ color: var(--text-muted); font-size:14.5px; max-width: 620px; margin-bottom: 18px; }
 
   .role-badge{
-    display:inline-flex; align-items:center; gap:7px;
+    display: inline-flex; align-items:center; gap:7px;
     font-family: var(--mono); font-size:11.5px;
     padding: 5px 11px; border-radius: 5px;
     background: var(--bg-elevated); border:1px solid var(--border);
@@ -176,7 +158,37 @@
     margin: -8px 0 22px; padding-left: 14px; border-left: 2px solid var(--border);
   }
 
-  /* ---- code / stack block ---- */
+  .media-wrap{
+    margin-bottom: 24px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--bg-panel);
+    display: none;
+  }
+  .media-wrap.ready{ display:block; }
+  .media-stage{
+    position: relative;
+    aspect-ratio: 16/9;
+    background: #000;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .media-slide{ display:none; width:100%; height:100%; align-items:center; justify-content:center; }
+  .media-slide.active{ display:flex; }
+  .media-slide img, .media-slide video{ width:100%; height:100%; object-fit:contain; background:#000; }
+  .media-nav{
+    position:absolute; top:50%; transform:translateY(-50%);
+    background: rgba(0,0,0,.5); color:#fff; border:none;
+    width:32px; height:32px; border-radius:50%; cursor:pointer;
+    font-size:15px; display:flex; align-items:center; justify-content:center;
+    transition: background .15s ease;
+  }
+  .media-nav:hover{ background: rgba(0,0,0,.75); }
+  .media-nav.prev{ left:10px; } .media-nav.next{ right:10px; }
+  .media-foot{ display:flex; align-items:center; justify-content:center; gap:8px; padding:10px; background: var(--bg-panel); }
+  .media-dot{ width:6px; height:6px; border-radius:50%; background: var(--border); cursor:pointer; transition: background .15s ease, transform .15s ease; border:none; padding:0; }
+  .media-dot.active{ background: var(--dot-accent, #fff); transform: scale(1.3); }
+
   .code-block{
     font-family: var(--mono);
     font-size: 12.8px;
@@ -188,12 +200,10 @@
     overflow-x:auto;
   }
   .code-line{ white-space: nowrap; padding: 2px 0; }
-  .kw{ color:#ff7b72; }       /* import / const */
+  .kw{ color:#ff7b72; }
   .brace{ color: var(--text-dim); }
-  .mod{ color: #a5d6ff; }     /* module names like 'backend' */
-  .comment{ color: #6e7681; }
+  .mod{ color: #a5d6ff; }
 
-  /* ---- highlights ---- */
   .section-label{
     font-family: var(--mono); font-size:11px; letter-spacing:.12em;
     text-transform:uppercase; color: var(--text-dim); margin: 26px 0 10px;
@@ -210,7 +220,6 @@
   }
   ul.highlights li b{ color: var(--text); font-weight:600; }
 
-  /* ---- file list ---- */
   .filelist{ border: 1px solid var(--border); border-radius: 8px; overflow:hidden; }
   a.filerow{
     display:flex; align-items:center; gap:12px;
@@ -222,6 +231,9 @@
   }
   a.filerow:last-child{ border-bottom:none; }
   a.filerow:hover{ background: var(--bg-hover); padding-left: 19px; }
+  a.filerow.child{ padding-left: 34px; background: var(--bg); }
+  a.filerow.child:hover{ padding-left: 41px; }
+  .tree-prefix{ font-family: var(--mono); color: var(--text-dim); font-size: 12px; }
   .badge{
     font-family: var(--mono); font-size:10.5px; font-weight:700;
     padding: 3px 6px; border-radius:4px; min-width: 42px; text-align:center;
@@ -255,7 +267,7 @@
 
   <div class="titlebar">
     <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
-    <div class="path"><b>portfolio</b> / yoonseohui / archive.md</div>
+    <div class="path"><b>portfolio</b> / yunseohui / archive.md</div>
   </div>
 
   <header class="hero">
@@ -274,6 +286,7 @@
 const projects = [
   {
     id: 'brew',
+    slug: 'BrewingSimulator',
     accent: '#e0972f',
     filename: 'BrewingSimulator.md',
     title: 'Brewing Simulator',
@@ -291,21 +304,26 @@ const projects = [
       '<b>FermentationEngine</b> — 효모 발효율, 세포 수 및 생존율 예측',
       '<b>Event-Driven Time-Step Architecture</b> — 시간 단위 상태 변화 시뮬레이션 구조',
     ],
-    files: [
-      { type: 'DIR', name: '전체 산출물 폴더', url: 'https://drive.google.com/drive/u/2/folders/1IJF2a3hwQltvhv_z6u9VuZnzf6btEbZS' },
-      { type: 'SHEET', name: '데이터 테이블 명세서', url: 'https://docs.google.com/spreadsheets/d/1Ops6IiY41RmnU4EkcRTOXiijw3SmpC-l/edit?gid=1701390567#gid=1701390567' },
-      { type: 'SHEET', name: '시스템 컴포넌트 명세서', url: 'https://docs.google.com/spreadsheets/d/14eJ990z9Zun0Bz4rLVkGrHbZFikvJEYs/edit?gid=2045717570#gid=2045717570' },
-      { type: 'SHEET', name: '핵심 로직 및 수식 정의서', url: 'https://docs.google.com/spreadsheets/d/1piFxmUnCiUNZ3rRaDN_GKz9PCiCm0PfB/edit?gid=967103001#gid=967103001' },
-      { type: 'SHEET', name: 'API 정의서', url: 'https://docs.google.com/spreadsheets/d/12DdcXieCNrZV0WtNFjqY7NCuEJj_1kWe/edit?gid=1717901196#gid=1717901196' },
-      { type: 'MP4', name: '전체 시연 영상', url: 'https://drive.google.com/file/d/1ppaB1qVphi21YJ9BHvHerNNBeOMdjBC-/view?usp=drive_link' },
-      { type: 'DIR', name: '페이지 화면 모음', url: 'https://drive.google.com/drive/u/2/folders/1QT3WtOOBVpNU3d_yZJYP6zCraUEhngj4' },
-      { type: 'GIT', name: 'GitHub — BrewingCalc', url: 'https://github.com/r-uwu/BrewingCalc_26_01' },
-      { type: 'GIT', name: 'GitHub — BrewingSimulator', url: 'https://github.com/r-uwu/BrewingSimulator_26_02' },
-      { type: 'LOG', name: '개발 과정 velog', url: 'https://velog.io/@ruwu/series/%EA%B0%9C%EC%9D%B8%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B81' },
-    ],
+    filesTree: {
+      parent: { type: 'DIR', name: '전체 산출물 폴더', url: 'https://drive.google.com/drive/u/2/folders/1IJF2a3hwQltvhv_z6u9VuZnzf6btEbZS' },
+      children: [
+        { type: 'SHEET', name: '데이터 테이블 명세서', url: 'https://docs.google.com/spreadsheets/d/1Ops6IiY41RmnU4EkcRTOXiijw3SmpC-l/edit?gid=1701390567#gid=1701390567' },
+        { type: 'SHEET', name: '시스템 컴포넌트 명세서', url: 'https://docs.google.com/spreadsheets/d/14eJ990z9Zun0Bz4rLVkGrHbZFikvJEYs/edit?gid=2045717570#gid=2045717570' },
+        { type: 'SHEET', name: '핵심 로직 및 수식 정의서', url: 'https://docs.google.com/spreadsheets/d/1piFxmUnCiUNZ3rRaDN_GKz9PCiCm0PfB/edit?gid=967103001#gid=967103001' },
+        { type: 'SHEET', name: 'API 정의서', url: 'https://docs.google.com/spreadsheets/d/12DdcXieCNrZV0WtNFjqY7NCuEJj_1kWe/edit?gid=1717901196#gid=1717901196' },
+      ],
+      others: [
+        { type: 'MP4', name: '전체 시연 영상', url: 'https://drive.google.com/file/d/1ppaB1qVphi21YJ9BHvHerNNBeOMdjBC-/view?usp=drive_link' },
+        { type: 'DIR', name: '페이지 화면 모음', url: 'https://drive.google.com/drive/u/2/folders/1QT3WtOOBVpNU3d_yZJYP6zCraUEhngj4' },
+        { type: 'GIT', name: 'GitHub — BrewingCalc', url: 'https://github.com/r-uwu/BrewingCalc_26_01' },
+        { type: 'GIT', name: 'GitHub — BrewingSimulator', url: 'https://github.com/r-uwu/BrewingSimulator_26_02' },
+        { type: 'LOG', name: '개발 과정 velog', url: 'https://velog.io/@ruwu/series/%EA%B0%9C%EC%9D%B8%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B81' },
+      ],
+    },
   },
   {
     id: 'study',
+    slug: 'MyStudyMate',
     accent: '#a78bfa',
     filename: 'MyStudyMate.md',
     title: 'My Study Mate',
@@ -325,22 +343,27 @@ const projects = [
       '<b>Redis</b>로 세션 중 단기 기억 처리, <b>H2 → MySQL</b> 마이그레이션으로 기록 장기 영속화',
       'User–Achievement <b>N:M 관계 정규화</b>(UserAchievement 엔티티 분리)로 데이터 무결성 확보',
     ],
-    files: [
-      { type: 'DIR', name: '전체 산출물 폴더', url: 'https://drive.google.com/drive/u/2/folders/1ZNiiOHi7OJ3uU1lT6Fr9771Qt-5VGs53' },
-      { type: 'DOC', name: 'KIT 바이브코딩 공모전 AI리포트', url: 'https://docs.google.com/document/d/1VAAP8N7hFIqIqUhNtGlLK7Kz1GzB5nUl/edit?usp=drive_link' },
-      { type: 'MP4', name: 'AI와 대화하기 실제 시연 영상', url: 'https://drive.google.com/file/d/1zOZ3w0ew3YxgUbnkCDvPNzuUb0Xv3HJ4/view?usp=drive_link' },
-      { type: 'SHEET', name: '테이블 명세서', url: 'https://docs.google.com/spreadsheets/d/1TqXttsDz6w_etWKHrByWB1NIu4RS4HXW/edit?usp=drive_link' },
-      { type: 'DOC', name: '프로젝트 결과 보고서', url: 'https://docs.google.com/document/d/1wLlRjgwEaFs6LrE6HfipegI8CfLOpwam/edit?usp=drive_link' },
-      { type: 'DOC', name: '프로젝트 기획서', url: 'https://docs.google.com/document/d/1TPu1uxRAv9G0k68k0aBswiPJvhgU5ajB/edit?usp=drive_link' },
-      { type: 'FIG', name: '화면 정의서 (Figma)', url: 'https://drive.google.com/file/d/1z94cFNzXcDMROfr_lFbHRkdhEkWPQsgt/view?usp=drive_link' },
-      { type: 'SHEET', name: 'API 정의서', url: 'https://docs.google.com/spreadsheets/d/1_LrU-4V2Z8Vnzgp1dUaeRf6QW6W7ZsK8/edit?usp=drive_link' },
-      { type: 'FIG', name: 'ERD', url: 'https://drive.google.com/file/d/10jnqX8MbUQmFs0ra79dh2m-OgZz6Bxp2/view?usp=drive_link' },
-      { type: 'GIT', name: 'GitHub', url: 'https://github.com/r-uwu/myStudyMate_26_04' },
-      { type: 'LOG', name: '개발 과정 velog', url: 'https://velog.io/@ruwu/series/%EA%B0%9C%EC%9D%B8%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B82' },
-    ],
+    filesTree: {
+      parent: { type: 'DIR', name: '전체 산출물 폴더', url: 'https://drive.google.com/drive/u/2/folders/1ZNiiOHi7OJ3uU1lT6Fr9771Qt-5VGs53' },
+      children: [
+        { type: 'DOC', name: 'KIT 바이브코딩 공모전 AI리포트', url: 'https://docs.google.com/document/d/1VAAP8N7hFIqIqUhNtGlLK7Kz1GzB5nUl/edit?usp=drive_link' },
+        { type: 'SHEET', name: '테이블 명세서', url: 'https://docs.google.com/spreadsheets/d/1TqXttsDz6w_etWKHrByWB1NIu4RS4HXW/edit?usp=drive_link' },
+        { type: 'DOC', name: '프로젝트 결과 보고서', url: 'https://docs.google.com/document/d/1wLlRjgwEaFs6LrE6HfipegI8CfLOpwam/edit?usp=drive_link' },
+        { type: 'DOC', name: '프로젝트 기획서', url: 'https://docs.google.com/document/d/1TPu1uxRAv9G0k68k0aBswiPJvhgU5ajB/edit?usp=drive_link' },
+        { type: 'FIG', name: '화면 정의서 (Figma)', url: 'https://drive.google.com/file/d/1z94cFNzXcDMROfr_lFbHRkdhEkWPQsgt/view?usp=drive_link' },
+        { type: 'SHEET', name: 'API 정의서', url: 'https://docs.google.com/spreadsheets/d/1_LrU-4V2Z8Vnzgp1dUaeRf6QW6W7ZsK8/edit?usp=drive_link' },
+        { type: 'FIG', name: 'ERD', url: 'https://drive.google.com/file/d/10jnqX8MbUQmFs0ra79dh2m-OgZz6Bxp2/view?usp=drive_link' },
+      ],
+      others: [
+        { type: 'MP4', name: 'AI와 대화하기 실제 시연 영상', url: 'https://drive.google.com/file/d/1zOZ3w0ew3YxgUbnkCDvPNzuUb0Xv3HJ4/view?usp=drive_link' },
+        { type: 'GIT', name: 'GitHub', url: 'https://github.com/r-uwu/myStudyMate_26_04' },
+        { type: 'LOG', name: '개발 과정 velog', url: 'https://velog.io/@ruwu/series/%EA%B0%9C%EC%9D%B8%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B82' },
+      ],
+    },
   },
   {
     id: 'social',
+    slug: 'SocialDaMoa',
     accent: '#2dd4bf',
     filename: 'SocialDaMoa.md',
     title: '소셜다모아 (All Social Gather)',
@@ -363,22 +386,27 @@ const projects = [
       '<b>생성 이미지 보존 파이프라인</b> — imgbb·Cloudinary 클라우드 API로 자동 생성 이미지를 보존하며 Meta 정책 준수',
       '<b>글로벌 헤더 및 챗봇 위젯</b> 공통 컴포넌트 개발',
     ],
-    files: [
-      { type: 'DIR', name: '전체 산출물 폴더', url: 'https://drive.google.com/drive/u/2/folders/1jNW7FG17xwy2KztZfkNgJ7XUBh7eWqt9' },
-      { type: 'SHEET', name: '요구사항 정의서', url: 'https://docs.google.com/spreadsheets/d/1SYn0lQnj5Gb5YXFtuXXAFCFF6K7R0FEk/edit?rtpof=true&gid=834749898#gid=834749898' },
-      { type: 'SHEET', name: '채널성과 분석 페이지 테이블 정의서', url: 'https://docs.google.com/spreadsheets/d/17GxWOsFbBV986ZYA08ftBhxDs4C9Ooi9/edit?gid=1918740117#gid=1918740117' },
-      { type: 'SHEET', name: '프로젝트 결과 보고서', url: 'https://docs.google.com/spreadsheets/d/1AtovpjoWVd5dG0d493uzViKl-bmHJavEky5ks6EzgTg/edit?gid=0#gid=0' },
-      { type: 'SHEET', name: '프로젝트 기획서', url: 'https://docs.google.com/spreadsheets/d/1V7m9JutMmtsiQuAs_FxJf4nxVaFHtzAT/edit?gid=1112076677#gid=1112076677' },
-      { type: 'DOC', name: '제안서', url: 'https://docs.google.com/document/d/1Pbdx6-mQ8NGGE-_bl9Po4DL3X_TM-FKv0xiWuGCx84Y/edit?tab=t.0' },
-      { type: 'DOC', name: '스키마', url: 'https://docs.google.com/document/d/1-dJKudBX2uXLXpvb2eTZrTR6niWRVvn0/edit' },
-      { type: 'FIG', name: 'Figma 페이지 모음', url: 'https://drive.google.com/drive/u/2/folders/1CrBqxvciZ8YlSwE5BJGajgP2-77tV6c4' },
-      { type: 'DIR', name: '페이지 캡쳐 모음', url: 'https://drive.google.com/drive/u/2/folders/1HpuFLkNI2xvLsmEczFbWWUz0U3LL-Okw' },
-      { type: 'GIT', name: 'GitHub', url: 'https://github.com/r-uwu/ASG_26_03' },
-      { type: 'LOG', name: '개발 과정 velog', url: 'https://velog.io/@ruwu/series/%ED%8C%80-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8' },
-    ],
+    filesTree: {
+      parent: { type: 'DIR', name: '전체 산출물 폴더', url: 'https://drive.google.com/drive/u/2/folders/1jNW7FG17xwy2KztZfkNgJ7XUBh7eWqt9' },
+      children: [
+        { type: 'SHEET', name: '요구사항 정의서', url: 'https://docs.google.com/spreadsheets/d/1SYn0lQnj5Gb5YXFtuXXAFCFF6K7R0FEk/edit?rtpof=true&gid=834749898#gid=834749898' },
+        { type: 'SHEET', name: '채널성과 분석 페이지 테이블 정의서', url: 'https://docs.google.com/spreadsheets/d/17GxWOsFbBV986ZYA08ftBhxDs4C9Ooi9/edit?gid=1918740117#gid=1918740117' },
+        { type: 'SHEET', name: '프로젝트 결과 보고서', url: 'https://docs.google.com/spreadsheets/d/1AtovpjoWVd5dG0d493uzViKl-bmHJavEky5ks6EzgTg/edit?gid=0#gid=0' },
+        { type: 'SHEET', name: '프로젝트 기획서', url: 'https://docs.google.com/spreadsheets/d/1V7m9JutMmtsiQuAs_FxJf4nxVaFHtzAT/edit?gid=1112076677#gid=1112076677' },
+        { type: 'DOC', name: '제안서', url: 'https://docs.google.com/document/d/1Pbdx6-mQ8NGGE-_bl9Po4DL3X_TM-FKv0xiWuGCx84Y/edit?tab=t.0' },
+        { type: 'DOC', name: '스키마', url: 'https://docs.google.com/document/d/1-dJKudBX2uXLXpvb2eTZrTR6niWRVvn0/edit' },
+      ],
+      others: [
+        { type: 'FIG', name: 'Figma 페이지 모음', url: 'https://drive.google.com/drive/u/2/folders/1CrBqxvciZ8YlSwE5BJGajgP2-77tV6c4' },
+        { type: 'DIR', name: '페이지 캡쳐 모음', url: 'https://drive.google.com/drive/u/2/folders/1HpuFLkNI2xvLsmEczFbWWUz0U3LL-Okw' },
+        { type: 'GIT', name: 'GitHub', url: 'https://github.com/r-uwu/ASG_26_03' },
+        { type: 'LOG', name: '개발 과정 velog', url: 'https://velog.io/@ruwu/series/%ED%8C%80-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8' },
+      ],
+    },
   },
   {
     id: 'paint',
+    slug: 'PaintOnLumia',
     accent: '#ff6ec7',
     filename: 'PaintOnLumia.md',
     title: 'PaintOnLumia',
@@ -411,21 +439,38 @@ const projects = [
 ];
 
 const badgeColorVar = { DOC:'--c-doc', SHEET:'--c-sheet', DIR:'--c-dir', MP4:'--c-mp4', FIG:'--c-fig', GIT:'--c-git', LOG:'--c-log' };
+const IMAGE_EXTS = ['jpg', 'jpeg', 'png', 'webp'];
+const VIDEO_EXTS = ['mp4', 'webm', 'mov'];
+const MAX_IMAGES = 8;
+const MAX_VIDEOS = 3;
 
 function renderStackBlock(stack){
   return stack.map(group => {
-    const items = group.items.map(i => `'${i}'`).join(', ');
     return `<div class="code-line"><span class="kw">import</span> <span class="brace">{</span> ${group.items.join(', ')} <span class="brace">}</span> <span class="kw">from</span> <span class="mod">'${group.comment}'</span></div>`;
   }).join('');
 }
 
-function renderFileRow(f){
+function renderFileRow(f, isChild){
   const colorVar = badgeColorVar[f.type] || '--c-doc';
-  return `<a class="filerow" href="${f.url}" target="_blank" rel="noopener noreferrer">
+  const cls = 'filerow' + (isChild ? ' child' : '');
+  const prefix = isChild ? '<span class="tree-prefix">ㄴ</span>' : '';
+  return `<a class="${cls}" href="${f.url}" target="_blank" rel="noopener noreferrer">
+    ${prefix}
     <span class="badge" style="color:var(${colorVar}); background:color-mix(in srgb, var(${colorVar}) 16%, transparent); border:1px solid color-mix(in srgb, var(${colorVar}) 35%, transparent);">${f.type}</span>
     <span class="fname">${f.name}</span>
     <span class="arrow">↗</span>
   </a>`;
+}
+
+function renderFileSection(p){
+  if (p.filesTree) {
+    const t = p.filesTree;
+    const parentRow = renderFileRow(t.parent, false);
+    const childRows = t.children.map(f => renderFileRow(f, true)).join('');
+    const otherRows = t.others.map(f => renderFileRow(f, false)).join('');
+    return `<div class="filelist">${parentRow}${childRows}${otherRows}</div>`;
+  }
+  return `<div class="filelist">${p.files.map(f => renderFileRow(f, false)).join('')}</div>`;
 }
 
 const tabsEl = document.getElementById('tabs');
@@ -449,6 +494,8 @@ projects.forEach((p, idx) => {
     <div class="role-badge"><span>${p.role.text}</span> · <b>${p.role.detail}</b></div>
     ${p.note ? `<div class="note">${p.note}</div>` : ''}
 
+    <div class="media-wrap" id="media-${p.id}" style="--dot-accent:${p.accent}"></div>
+
     <div class="section-label">tech stack</div>
     <div class="code-block">${renderStackBlock(p.stack)}</div>
 
@@ -460,7 +507,7 @@ projects.forEach((p, idx) => {
     ` : ''}
 
     <div class="section-label">deliverables</div>
-    <div class="filelist">${p.files.map(renderFileRow).join('')}</div>
+    ${renderFileSection(p)}
   `;
   panelsEl.appendChild(panel);
 });
@@ -474,6 +521,113 @@ function activate(id){
   });
   document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.dataset.id === id));
 }
+
+/* ---------------- media detection + carousel ---------------- */
+
+async function urlExists(url){
+  try {
+    const res = await fetch(url, { method: 'HEAD', cache: 'no-store' });
+    return res.ok;
+  } catch(e){
+    return false;
+  }
+}
+
+async function findMediaForSlug(slug){
+  const videos = [];
+  const images = [];
+
+  for (let i = 1; i <= MAX_VIDEOS; i++){
+    let found = null;
+    for (const ext of VIDEO_EXTS){
+      const url = `./${slug}_video_${i}.${ext}`;
+      if (await urlExists(url)){ found = url; break; }
+    }
+    if (found) videos.push(found); else break;
+  }
+
+  for (let i = 1; i <= MAX_IMAGES; i++){
+    let found = null;
+    for (const ext of IMAGE_EXTS){
+      const url = `./${slug}_image_${i}.${ext}`;
+      if (await urlExists(url)){ found = url; break; }
+    }
+    if (found) images.push(found); else break;
+  }
+
+  return { videos, images };
+}
+
+function buildCarousel(container, videos, images){
+  const slides = [
+    ...videos.map(url => ({ type: 'video', url })),
+    ...images.map(url => ({ type: 'image', url })),
+  ];
+  if (slides.length === 0) return;
+
+  container.classList.add('ready');
+  container.innerHTML = `
+    <div class="media-stage">
+      ${slides.map((s, i) => `
+        <div class="media-slide${i === 0 ? ' active' : ''}" data-i="${i}">
+          ${s.type === 'video'
+            ? `<video src="${s.url}" controls playsinline></video>`
+            : `<img src="${s.url}" alt="demo ${i+1}">`}
+        </div>
+      `).join('')}
+      ${slides.length > 1 ? `
+        <button class="media-nav prev" aria-label="이전">‹</button>
+        <button class="media-nav next" aria-label="다음">›</button>
+      ` : ''}
+    </div>
+    ${slides.length > 1 ? `
+      <div class="media-foot">
+        ${slides.map((_, i) => `<button class="media-dot${i === 0 ? ' active' : ''}" data-i="${i}"></button>`).join('')}
+      </div>
+    ` : ''}
+  `;
+
+  let current = 0;
+  let timer = null;
+  const slideEls = container.querySelectorAll('.media-slide');
+  const dotEls = container.querySelectorAll('.media-dot');
+
+  function stopVideos(){
+    container.querySelectorAll('video').forEach(v => v.pause());
+  }
+
+  function show(i){
+    current = (i + slides.length) % slides.length;
+    stopVideos();
+    slideEls.forEach((el, idx) => el.classList.toggle('active', idx === current));
+    dotEls.forEach((el, idx) => el.classList.toggle('active', idx === current));
+    resetTimer();
+  }
+
+  function resetTimer(){
+    if (timer) clearInterval(timer);
+    if (slides[current].type === 'image' && slides.length > 1){
+      timer = setInterval(() => show(current + 1), 5000);
+    }
+  }
+
+  if (slides.length > 1){
+    container.querySelector('.prev').addEventListener('click', () => show(current - 1));
+    container.querySelector('.next').addEventListener('click', () => show(current + 1));
+    dotEls.forEach(el => el.addEventListener('click', () => show(parseInt(el.dataset.i, 10))));
+  }
+
+  resetTimer();
+}
+
+(async function initMedia(){
+  await Promise.all(projects.map(async p => {
+    const { videos, images } = await findMediaForSlug(p.slug);
+    if (videos.length === 0 && images.length === 0) return;
+    const container = document.getElementById(`media-${p.id}`);
+    buildCarousel(container, videos, images);
+  }));
+})();
 </script>
 </body>
 </html>
