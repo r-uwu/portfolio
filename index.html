@@ -189,6 +189,30 @@
   .media-dot{ width:6px; height:6px; border-radius:50%; background: var(--border); cursor:pointer; transition: background .15s ease, transform .15s ease; border:none; padding:0; }
   .media-dot.active{ background: var(--dot-accent, #fff); transform: scale(1.3); }
 
+  .pptx-wrap{
+    margin-bottom: 24px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--bg-panel);
+    display: none;
+  }
+  .pptx-wrap.ready{ display:block; }
+  .pptx-wrap iframe{
+    width: 100%;
+    height: 620px;
+    border: none;
+    display: block;
+    background: #fff;
+  }
+  .pptx-foot{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 9px 14px; background: var(--bg-panel);
+    font-family: var(--mono); font-size: 11.5px; color: var(--text-dim);
+  }
+  .pptx-foot a{ color: var(--text-muted); text-decoration:none; }
+  .pptx-foot a:hover{ color: var(--text); }
+
   .code-block{
     font-family: var(--mono);
     font-size: 12.8px;
@@ -327,7 +351,7 @@ const projects = [
     accent: '#a78bfa',
     filename: 'MyStudyMate.md',
     title: 'My Study Mate',
-    summary: '파인만 학습법에서 영감을 받아, 음성 인식(STT)과 TTS로 사용자와 대화하며 스스로 학습을 돕는 AI 도구. 학습 요약과 대시보드 기능 제공',
+    summary: '파인만 학습법에서 영감을 받아, 음성 인식(STT)과 TTS로 사용자와 대화하며 스스로 학습을 돕는 AI 친구. 학습 요약과 대시보드 기능 제공',
     role: { text: '1인 개발', detail: '기획 · 설계 · 백엔드 · 프론트엔드 · 배포 전 과정 단독 수행' },
     stack: [
       { comment: 'ai', items: ['GPT-4o-mini', 'Whisper-1(STT)', 'VAD'] },
@@ -363,7 +387,7 @@ const projects = [
   },
   {
     id: 'social',
-    slug: 'SocialDaMoa',
+    slug: 'AllSocialGather',
     accent: '#2dd4bf',
     filename: 'AllSocialGather.md',
     title: '소셜다모아 (All Social Gather)',
@@ -495,6 +519,7 @@ projects.forEach((p, idx) => {
     ${p.note ? `<div class="note">${p.note}</div>` : ''}
 
     <div class="media-wrap" id="media-${p.id}" style="--dot-accent:${p.accent}"></div>
+    <div class="pptx-wrap" id="pptx-${p.id}"></div>
 
     <div class="section-label">tech stack</div>
     <div class="code-block">${renderStackBlock(p.stack)}</div>
@@ -620,12 +645,40 @@ function buildCarousel(container, videos, images){
   resetTimer();
 }
 
+async function findPptxForSlug(slug){
+  const url = `./${slug}.pptx`;
+  return (await urlExists(url)) ? url : null;
+}
+
+function buildPptxEmbed(container, pptxUrl){
+  const absoluteUrl = new URL(pptxUrl, window.location.href).href;
+  const viewerUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(absoluteUrl)}`;
+  container.classList.add('ready');
+  container.innerHTML = `
+    <iframe src="${viewerUrl}" allowfullscreen></iframe>
+    <div class="pptx-foot">
+      <span>slides preview — office viewer</span>
+      <a href="${pptxUrl}" target="_blank" rel="noopener noreferrer">원본 PPT 새 창에서 열기 ↗</a>
+    </div>
+  `;
+}
+
 (async function initMedia(){
   await Promise.all(projects.map(async p => {
-    const { videos, images } = await findMediaForSlug(p.slug);
-    if (videos.length === 0 && images.length === 0) return;
-    const container = document.getElementById(`media-${p.id}`);
-    buildCarousel(container, videos, images);
+    const [{ videos, images }, pptxUrl] = await Promise.all([
+      findMediaForSlug(p.slug),
+      findPptxForSlug(p.slug),
+    ]);
+
+    if (videos.length > 0 || images.length > 0){
+      const mediaContainer = document.getElementById(`media-${p.id}`);
+      buildCarousel(mediaContainer, videos, images);
+    }
+
+    if (pptxUrl){
+      const pptxContainer = document.getElementById(`pptx-${p.id}`);
+      buildPptxEmbed(pptxContainer, pptxUrl);
+    }
   }));
 })();
 </script>
